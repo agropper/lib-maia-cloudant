@@ -1,0 +1,30 @@
+{
+  "name": "lib-maia-cloudant",
+  "version": "0.1.0",
+  "description": "Clean Cloudant client for MAIA",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "echo 'No build step yet'",
+    "test": "echo 'Tests coming soon'"
+  },
+  "keywords": [
+    "cloudant",
+    "couchdb",
+    "maia"
+  ],
+  "author": "HIEofOne.org",
+  "license": "MIT",
+  "dependencies": {
+    "@cloudant/cloudant": "^4.0.0"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./document": "./dist/document-client.js",
+    "./session": "./dist/session-store.js"
+  },
+  "files": [
+    "dist"
+  ]
+}
+
