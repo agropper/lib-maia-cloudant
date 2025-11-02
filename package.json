@@ -16,7 +16,8 @@
   "author": "HIEofOne.org",
   "license": "MIT",
   "dependencies": {
-    "@cloudant/cloudant": "^4.0.0"
+    "nano": "^10.1.2",
+    "express-session": "^1.17.3"
   },
   "exports": {
     ".": "./dist/index.js",
