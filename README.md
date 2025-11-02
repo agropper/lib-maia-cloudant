@@ -61,7 +61,80 @@ Extract from:
 - **No complex state**: Simple document operations
 - **Production logging**: Winston INFO/WARN/ERROR only
 
+## Features
+
+- **Document operations**: `getDocument`, `saveDocument`, `deleteDocument`, `findDocuments`, `getAll`
+- **Session store**: `express-session` compatible `CloudantSessionStore`
+- **Session management**: Sessions stored by `userId` as `_id` for easy dashboard viewing
+- **Audit logging**: `AuditLogService` for security event logging
+- **Database creation**: Automatic database creation helper
+- **Simple API**: Promise-based functions with clear error handling
+
+## API Reference
+
+### CloudantClient
+
+```javascript
+const client = new CloudantClient({
+  url: process.env.CLOUDANT_URL,
+  username: process.env.CLOUDANT_USERNAME,
+  password: process.env.CLOUDANT_PASSWORD
+});
+
+// Test connection
+await client.testConnection();
+
+// Create database
+await client.createDatabase('maia_users');
+
+// Document operations
+const doc = await client.getDocument('maia_users', 'userId');
+await client.saveDocument('maia_users', doc);
+await client.deleteDocument('maia_users', 'userId');
+
+// Query
+const results = await client.findDocuments('maia_users', {
+  selector: { type: 'user' }
+});
+```
+
+### CloudantSessionStore
+
+```javascript
+const sessionStore = new CloudantSessionStore({
+  cloudantClient: client,
+  dbName: 'maia_sessions'
+});
+
+app.use(session({
+  store: sessionStore,
+  secret: 'your-secret',
+  resave: false,
+  saveUninitialized: false
+}));
+```
+
+**Session Storage**: Sessions are stored with `userId` as the document `_id`, making them easy to view in the Cloudant dashboard. A small mapping document is maintained for express-session compatibility.
+
+### AuditLogService
+
+```javascript
+const auditLog = new AuditLogService(client, 'maia_audit_log');
+
+// Log security events
+await auditLog.logEvent({
+  type: 'login_success',
+  userId: 'user123',
+  ip: '192.168.1.1',
+  userAgent: 'Mozilla/5.0...'
+});
+
+// Query logs
+const userLogs = await auditLog.getUserLogs('user123', 50);
+const failures = await auditLog.getFailedLogins(20);
+```
+
 ## Status
 
-🚧 In Progress - Initial structure only
+✅ **Complete** - Fully implemented and tested
 
